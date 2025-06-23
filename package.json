@@ -1,0 +1,31 @@
+{
+  "name": "event-nft-platform",
+  "version": "1.0.0",
+  "description": "Decentralized event ticket marketplace with NFT and escrow functionality",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network goerli",
+    "node": "hardhat node",
+    "frontend": "cd frontend && npm start",
+    "install-all": "npm install && cd frontend && npm install"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "chai": "^4.3.8",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.17.1",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.4"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3"
+  },
+  "keywords": ["blockchain", "nft", "tickets", "escrow", "web3"],
+  "author": "EventNFT Team",
+  "license": "MIT"
+} 
