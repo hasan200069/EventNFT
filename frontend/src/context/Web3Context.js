@@ -44,19 +44,19 @@ export const Web3Provider = ({ children }) => {
   useEffect(() => {
     const initializeWeb3 = async () => {
       if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.BrowserProvider(window.ethereum);
         setProvider(provider);
 
         // Check if already connected
         try {
           const accounts = await provider.listAccounts();
           if (accounts.length > 0) {
-            const signer = provider.getSigner();
+            const signer = await provider.getSigner();
             const network = await provider.getNetwork();
             
-            setAccount(accounts[0]);
+            setAccount(accounts[0].address);
             setSigner(signer);
-            setChainId(network.chainId);
+            setChainId(Number(network.chainId));
             
             await initializeContracts(signer);
           }
@@ -90,7 +90,7 @@ export const Web3Provider = ({ children }) => {
       // User switched accounts
       setAccount(accounts[0]);
       if (provider) {
-        const signer = provider.getSigner();
+        const signer = await provider.getSigner();
         setSigner(signer);
         await initializeContracts(signer);
       }
@@ -146,19 +146,19 @@ export const Web3Provider = ({ children }) => {
         throw new Error('No accounts returned');
       }
 
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
       const network = await provider.getNetwork();
 
       // Check if we're on a supported network
-      if (!SUPPORTED_NETWORKS[network.chainId]) {
+      if (!SUPPORTED_NETWORKS[Number(network.chainId)]) {
         toast.warn(`Unsupported network. Please switch to a supported network.`);
       }
 
       setProvider(provider);
       setSigner(signer);
       setAccount(accounts[0]);
-      setChainId(network.chainId);
+      setChainId(Number(network.chainId));
 
       await initializeContracts(signer);
 
@@ -192,7 +192,7 @@ export const Web3Provider = ({ children }) => {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: ethers.utils.hexValue(targetChainId) }],
+        params: [{ chainId: ethers.toQuantity(targetChainId) }],
       });
       return true;
     } catch (error) {
@@ -212,11 +212,11 @@ export const Web3Provider = ({ children }) => {
   };
 
   const formatEther = (value) => {
-    return ethers.utils.formatEther(value);
+    return ethers.formatEther(value);
   };
 
   const parseEther = (value) => {
-    return ethers.utils.parseEther(value.toString());
+    return ethers.parseEther(value.toString());
   };
 
   // Contract interaction helpers

@@ -10,7 +10,7 @@ describe("EventTicketNFT", function () {
     eventDate: "2024-12-31",
     venue: "Madison Square Garden",
     seatInfo: "Section A, Row 5, Seat 10",
-    originalPrice: ethers.utils.parseEther("0.1"),
+    originalPrice: ethers.parseEther("0.1"),
     proofImageHash: "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
     tokenURI: "https://ipfs.io/ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG"
   };
@@ -60,7 +60,7 @@ describe("EventTicketNFT", function () {
       const newAdmin = ethers.Wallet.createRandom();
       await expect(
         eventTicketNFT.connect(admin).addAdmin(newAdmin.address)
-      ).to.be.revertedWith("Ownable: caller is not the owner");
+      ).to.be.revertedWithCustomError(eventTicketNFT, "OwnableUnauthorizedAccount");
     });
   });
 
@@ -108,7 +108,7 @@ describe("EventTicketNFT", function () {
         "2024-11-01",
         "Another Venue",
         "Section B",
-        ethers.utils.parseEther("0.2"),
+        ethers.parseEther("0.2"),
         "QmAnotherHash",
         "https://ipfs.io/ipfs/QmAnotherHash"
       );
