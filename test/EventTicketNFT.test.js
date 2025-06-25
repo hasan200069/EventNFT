@@ -20,7 +20,7 @@ describe("EventTicketNFT", function () {
 
     const EventTicketNFT = await ethers.getContractFactory("EventTicketNFT");
     eventTicketNFT = await EventTicketNFT.deploy();
-    await eventTicketNFT.deployed();
+    await eventTicketNFT.waitForDeployment();
 
     // Add admin
     await eventTicketNFT.addAdmin(admin.address);
@@ -60,7 +60,7 @@ describe("EventTicketNFT", function () {
       const newAdmin = ethers.Wallet.createRandom();
       await expect(
         eventTicketNFT.connect(admin).addAdmin(newAdmin.address)
-      ).to.be.revertedWithCustomError(eventTicketNFT, "OwnableUnauthorizedAccount");
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 

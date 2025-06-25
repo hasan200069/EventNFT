@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -85,13 +86,13 @@ contract EventTicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, Pa
         string memory seatInfo,
         uint256 originalPrice,
         string memory proofImageHash,
-        string memory tokenURI
+        string memory metadataURI
     ) public returns (uint256) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         
         _safeMint(to, tokenId);
-        _setTokenURI(tokenId, tokenURI);
+        _setTokenURI(tokenId, metadataURI);
 
         ticketInfo[tokenId] = TicketInfo({
             eventName: eventName,
@@ -187,7 +188,7 @@ contract EventTicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, Pa
         address from,
         address to,
         uint256 tokenId
-    ) public override notLocked(tokenId) {
+    ) public override(ERC721, IERC721) notLocked(tokenId) {
         super.transferFrom(from, to, tokenId);
     }
 
@@ -195,7 +196,7 @@ contract EventTicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, Pa
         address from,
         address to,
         uint256 tokenId
-    ) public override notLocked(tokenId) {
+    ) public override(ERC721, IERC721) notLocked(tokenId) {
         super.safeTransferFrom(from, to, tokenId);
     }
 
@@ -204,7 +205,7 @@ contract EventTicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, Pa
         address to,
         uint256 tokenId,
         bytes memory data
-    ) public override notLocked(tokenId) {
+    ) public override(ERC721, IERC721) notLocked(tokenId) {
         super.safeTransferFrom(from, to, tokenId, data);
     }
 
@@ -270,5 +271,12 @@ contract EventTicketNFT is ERC721, ERC721URIStorage, ERC721Burnable, Ownable, Pa
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    /**
+     * @dev Returns the total number of tokens minted
+     */
+    function totalSupply() public view returns (uint256) {
+        return _tokenIdCounter.current();
     }
 } 

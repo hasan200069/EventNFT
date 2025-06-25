@@ -21,9 +21,16 @@
     "solidity-coverage": "^0.8.4"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.3"
+    "@openzeppelin/contracts": "^4.9.3",
+    "dotenv": "^16.5.0"
   },
-  "keywords": ["blockchain", "nft", "tickets", "escrow", "web3"],
+  "keywords": [
+    "blockchain",
+    "nft",
+    "tickets",
+    "escrow",
+    "web3"
+  ],
   "author": "EventNFT Team",
   "license": "MIT"
-} 
+}
