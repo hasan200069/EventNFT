@@ -7,25 +7,27 @@ async function main() {
   // Get the ContractFactory and Signers here.
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with the account:", deployer.address);
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  const balance = await deployer.provider.getBalance(deployer.address);
+  console.log("Account balance:", balance.toString());
+
 
   // Deploy EventTicketNFT contract
   console.log("\n1. Deploying EventTicketNFT...");
   const EventTicketNFT = await ethers.getContractFactory("EventTicketNFT");
   const ticketNFT = await EventTicketNFT.deploy();
-  await ticketNFT.deployed();
-  console.log("EventTicketNFT deployed to:", ticketNFT.address);
-
+  await ticketNFT.waitForDeployment();
+  console.log("EventTicketNFT deployed to:", ticketNFT.target);
+  
   // Deploy TicketMarketplace contract
   console.log("\n2. Deploying TicketMarketplace...");
   const TicketMarketplace = await ethers.getContractFactory("TicketMarketplace");
-  const marketplace = await TicketMarketplace.deploy(ticketNFT.address);
-  await marketplace.deployed();
-  console.log("TicketMarketplace deployed to:", marketplace.address);
+  const marketplace = await TicketMarketplace.deploy(ticketNFT.target);
+  await marketplace.waitForDeployment();
+  console.log("TicketMarketplace deployed to:", marketplace.target);
 
   // Authorize marketplace in NFT contract
   console.log("\n3. Authorizing marketplace in NFT contract...");
-  const authorizeTx = await ticketNFT.authorizeMarketplace(marketplace.address);
+  const authorizeTx = await ticketNFT.authorizeMarketplace(marketplace.target);
   await authorizeTx.wait();
   console.log("Marketplace authorized successfully");
 
@@ -36,12 +38,12 @@ async function main() {
     deployer: deployer.address,
     contracts: {
       EventTicketNFT: {
-        address: ticketNFT.address,
-        transactionHash: ticketNFT.deployTransaction.hash
+        address: ticketNFT.target,
+        transactionHash: ticketNFT.deploymentTransaction().hash
       },
       TicketMarketplace: {
-        address: marketplace.address,
-        transactionHash: marketplace.deployTransaction.hash
+        address: marketplace.target,
+        transactionHash: marketplace.deploymentTransaction().hash
       }
     },
     deploymentTime: new Date().toISOString()
