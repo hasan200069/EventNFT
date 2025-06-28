@@ -58,6 +58,7 @@ const AdminDashboard = () => {
   const [resolving, setResolving] = useState(false);
 
   useEffect(() => {
+    console.log("Contracts inside admin:", contracts);
     if (contracts.ticketNFT && contracts.marketplace) {
       loadDashboardData();
     }
@@ -81,13 +82,16 @@ const AdminDashboard = () => {
   const loadPendingTickets = async () => {
     try {
       // Get all tickets and filter for pending ones
+      console.log("Fetching total supply...");
+      console.log("ticketNFT address:", contracts.ticketNFT.target);
       const totalSupply = await contracts.ticketNFT.totalSupply();
+      console.log("Total tickets:", totalSupply.toString());
       const pending = [];
 
       for (let i = 0; i < totalSupply; i++) {
         try {
           const ticketInfo = await contracts.ticketNFT.getTicketInfo(i);
-          if (ticketInfo.status === 0) { // PENDING
+          if (Number(ticketInfo.status) === 0) { // PENDING
             const owner = await contracts.ticketNFT.ownerOf(i);
             const tokenURI = await contracts.ticketNFT.tokenURI(i);
             
@@ -111,7 +115,10 @@ const AdminDashboard = () => {
 
   const loadDisputes = async () => {
     try {
+      console.log("Fetching active escrows...");
       const activeEscrows = await contracts.marketplace.getActiveEscrows();
+      console.log("Escrows:", activeEscrows);
+
       const disputedTransactions = [];
 
       for (const tokenId of activeEscrows) {
@@ -171,8 +178,9 @@ const AdminDashboard = () => {
   };
 
   const formatDate = (timestamp) => {
-    return new Date(timestamp * 1000).toLocaleDateString();
+    return new Date(Number(timestamp) * 1000).toLocaleDateString(); 
   };
+
 
   if (!account) {
     return (
@@ -487,7 +495,7 @@ const AdminDashboard = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDetailsDialog(false)}>Close</Button>
-          {selectedTicket && selectedTicket.ticketInfo.status === 0 && (
+          {selectedTicket && Number(selectedTicket.ticketInfo.status) === 0 && (
             <Button
               variant="contained"
               color="success"

@@ -108,7 +108,8 @@ export const Web3Provider = ({ children }) => {
         console.warn('Contract addresses not set');
         return;
       }
-
+      // console.log("NFT address:", CONTRACT_ADDRESSES.TICKET_NFT);
+      // console.log("Marketplace address:", CONTRACT_ADDRESSES.MARKETPLACE);
       const ticketNFT = new ethers.Contract(
         CONTRACT_ADDRESSES.TICKET_NFT,
         EventTicketNFTABI.abi,
@@ -122,6 +123,10 @@ export const Web3Provider = ({ children }) => {
       );
 
       setContracts({ ticketNFT, marketplace });
+
+      // const network = await signer.provider.getNetwork();
+      // console.log("Connected network:", network);
+
     } catch (error) {
       console.error('Error initializing contracts:', error);
       toast.error('Failed to initialize contracts');
@@ -230,7 +235,7 @@ export const Web3Provider = ({ children }) => {
         ticketData.eventDate,
         ticketData.venue,
         ticketData.seatInfo,
-        ticketData.originalPrice,
+        parseEther(String(ticketData.originalPrice || "0")),
         ticketData.proofImageHash,
         ticketData.tokenURI
       );

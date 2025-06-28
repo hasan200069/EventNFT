@@ -84,8 +84,11 @@ const Marketplace = () => {
           }
         })
       );
-
-      setTickets(ticketsData.filter(ticket => ticket !== null));
+      setTickets(
+        ticketsData.filter(
+          (ticket) => ticket !== null && Number(ticket.ticketInfo.status) === 1 // VERIFIED
+        )
+      );
     } catch (error) {
       console.error('Error loading tickets:', error);
       toast.error('Failed to load tickets');
@@ -301,8 +304,8 @@ const Marketplace = () => {
                   <Chip
                     size="small"
                     icon={<Verified />}
-                    label={getStatusText(ticket.ticketInfo.status)}
-                    color={getStatusColor(ticket.ticketInfo.status)}
+                    label={getStatusText(Number(ticket.ticketInfo.status))}
+                    color={getStatusColor(Number(ticket.ticketInfo.status))}
                   />
                 </Box>
                 

@@ -70,7 +70,7 @@ async function main() {
   fs.writeFileSync(
     `${artifactsPath}/EventTicketNFT.json`,
     JSON.stringify({
-      address: ticketNFT.address,
+      address: ticketNFT.target,
       abi: eventTicketNFTArtifact.abi
     }, null, 2)
   );
@@ -78,7 +78,7 @@ async function main() {
   fs.writeFileSync(
     `${artifactsPath}/TicketMarketplace.json`,
     JSON.stringify({
-      address: marketplace.address,
+      address: marketplace.target,
       abi: marketplaceArtifact.abi
     }, null, 2)
   );
@@ -88,8 +88,8 @@ async function main() {
   console.log("\n🎉 Deployment completed successfully!");
   console.log("\nContract Addresses:");
   console.log("==================");
-  console.log(`EventTicketNFT: ${ticketNFT.address}`);
-  console.log(`TicketMarketplace: ${marketplace.address}`);
+  console.log(`EventTicketNFT: ${ticketNFT.target}`);
+  console.log(`TicketMarketplace: ${marketplace.target}`);
   console.log("\nNext Steps:");
   console.log("1. Update frontend environment variables");
   console.log("2. Start the frontend application");
